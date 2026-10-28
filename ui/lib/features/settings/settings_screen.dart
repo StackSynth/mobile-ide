@@ -198,6 +198,26 @@ class SettingsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                const Divider(height: 1),
+
+                // Command Palette Position setting
+                ListTile(
+                  leading: const Icon(Icons.search_rounded, size: 20, color: AppColors.accentCyan),
+                  title: const Text('Cmd Palette Button', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Position or hide the Cmd button', style: TextStyle(fontSize: 11, color: AppColors.darkTextMuted)),
+                  trailing: DropdownButton<String>(
+                    value: settings.cmdButtonPosition,
+                    underline: const SizedBox.shrink(),
+                    onChanged: (pos) {
+                      if (pos != null) ref.read(settingsProvider.notifier).setCmdButtonPosition(pos);
+                    },
+                    items: const [
+                      DropdownMenuItem(value: 'top', child: Text('Top Bar (Up)')),
+                      DropdownMenuItem(value: 'floating', child: Text('Floating Bottom')),
+                      DropdownMenuItem(value: 'hidden', child: Text('Hidden')),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

@@ -1,17 +1,178 @@
-# my_app
+# StackSynth Mobile Cloud IDE
 
-A new Flutter project.
+A mobile-first cloud IDE built with Flutter, Material 3, and Riverpod. StackSynth enables developers to build, test, and ship real applications (e.g. React 19 + Vite, Next.js, Node.js, Python FastAPI) directly from their phone while an isolated cloud container handles the terminal, build processes, and live preview.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## Architecture & Design Principles
 
-A few resources to get you started if this is your first Flutter project:
+1. **One focus at a time**: Mobile-native single-pane flow instead of desktop multi-window clutter.
+2. **Thumb-friendly UX**: Bottom navigation bar, floating Command Palette trigger, symbol toolbar pinned above keyboard, and quick-action chips.
+3. **Reduced glass typing**: Context-aware AI code generation, quick symbols toolbar (`Tab`, `{`, `}`, `=>`, `//`, etc.), command history sheets, and snippets.
+4. **Resilient on flaky networks**: Prominent container connection status banner with auto-reconnect and instant state persistence.
+5. **High-contrast dark design**: OLED-optimized dark theme by default, with smooth light mode toggle and typography powered by JetBrains Mono and Inter.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Folder Structure
+
+```
+lib/
+├── core/
+│   ├── theme/
+│   │   ├── app_colors.dart         # Color tokens for OLED dark, light, terminal & syntax
+│   │   └── app_theme.dart          # Material 3 dark/light themes and typography
+│   └── widgets/
+│       ├── command_palette_sheet.dart  # Searchable bottom sheet for quick actions
+│       ├── connection_status_banner.dart # Flaky network state indicator & reconnect
+│       ├── empty_state_view.dart       # Empty state placeholder
+│       └── status_chip.dart            # Running, Sleeping, Starting status indicator
+├── models/
+│   ├── project.dart                # Cloud container workspace models
+│   ├── file_node.dart              # File tree nodes & Git status badges
+│   ├── terminal_session.dart       # PTY sessions & connection states
+│   ├── preview_state.dart          # Device viewport & DevTools console logs
+│   ├── ai_message.dart             # Chat messages & Agent action cards
+│   └── file_diff.dart              # Unified diff line models (Additions/Deletions)
+├── services/
+│   ├── project_service.dart        # ProjectService interface & MockProjectService
+│   ├── file_service.dart           # FileService interface & MockFileService
+│   ├── terminal_service.dart       # TerminalService interface & MockTerminalService
+│   ├── preview_service.dart        # PreviewService interface & MockPreviewService
+│   ├── ai_service.dart             # AiService interface & MockAiService
+│   └── settings_service.dart       # SettingsState & SettingsNotifier
+├── features/
+│   ├── navigation/
+│   │   ├── app_shell.dart          # 5-tab bottom navigation & tablet adaptive rail
+│   │   └── app_router.dart         # GoRouter configuration & StatefulShellRoute
+│   ├── projects/
+│   │   ├── projects_screen.dart    # Recent workspaces, wake/sleep cards
+│   │   ├── new_project_sheet.dart  # Container starter templates (React, Next, Python)
+│   │   └── clone_repo_sheet.dart   # Git repository clone sheet
+│   ├── files/
+│   │   ├── files_screen.dart       # Collapsible file tree (>=48dp touch targets)
+│   │   └── file_context_menu.dart  # Long-press sheet: rename, duplicate, delete
+│   ├── editor/
+│   │   ├── editor_screen.dart      # Syntax-highlighted code editor with line gutter
+│   │   ├── code_tab_strip.dart     # Horizontally scrollable open file tabs
+│   │   ├── symbol_toolbar.dart     # Coding keys bar with Tab, undo/redo, comment
+│   │   └── code_syntax_highlighter.dart # Real-time syntax coloring controller
+│   ├── terminal/
+│   │   ├── terminal_screen.dart    # Multi-tab xterm terminal sessions
+│   │   ├── terminal_key_row.dart   # Custom terminal keys: Ctrl, Esc, Tab, arrows, |, ~
+│   │   └── command_history_sheet.dart # Tap-to-reuse past commands sheet
+│   ├── preview/
+│   │   ├── preview_screen.dart     # Live preview with URL bar & device toggle
+│   │   ├── console_drawer.dart     # DevTools sliding console drawer & logs
+│   │   └── interactive_preview_canvas.dart # Interactive sandbox app canvas
+│   ├── ai/
+│   │   ├── ai_screen.dart          # Pinned prompt chat, agent action cards, context
+│   │   ├── diff_review_screen.dart # Unified diff review with swipe to accept/reject
+│   │   └── agent_action_card.dart  # Agent action items ("Edited 3 files", "Ran pnpm")
+│   └── settings/
+│       └── settings_screen.dart    # Theme, font size, keybars, AI model, cloud usage
+└── main.dart                       # Entry point with ProviderScope & GoRouter
+```
+
+---
+
+## Replacing Mock Services with Real Cloud Backend
+
+Every service in `lib/services/` is defined with a clean abstract interface and Riverpod provider, allowing zero-friction swapping with production WebSocket and REST/gRPC implementations:
+
+### 1. ProjectService (`lib/services/project_service.dart`)
+- **Current Mock**: `MockProjectService` handles local state for starter templates and container sleeping/waking.
+- **Production Implementation**:
+  ```dart
+  class CloudContainerProjectService implements ProjectService {
+    final HttpClient http;
+    CloudContainerProjectService(this.http);
+
+    @override
+    Future<List<Project>> getProjects() async {
+      final res = await http.get('/api/v1/containers');
+      return (res.data as List).map((j) => Project.fromJson(j)).toList();
+    }
+
+    @override
+    Future<Project> wakeProject(String projectId) async {
+      final res = await http.post('/api/v1/containers/$projectId/wake');
+      return Project.fromJson(res.data);
+    }
+    // ...
+  }
+  ```
+- **Swap**: Update `projectServiceProvider`:
+  ```dart
+  final projectServiceProvider = Provider<ProjectService>((ref) {
+    return CloudContainerProjectService(ref.watch(httpClientProvider));
+  });
+  ```
+
+### 2. FileService (`lib/services/file_service.dart`)
+- **Current Mock**: `MockFileService` provides in-memory mock project files (`src/App.tsx`, `package.json`, etc.).
+- **Production Implementation**:
+  - Connect to container filesystem via WebDAV, SSH SFTP, or Language Server Protocol (LSP).
+  - Use WebSockets to listen for remote file change events (`chokidar` / `inotify` on container):
+  ```dart
+  class RemoteContainerFileService implements FileService {
+    final WebSocketChannel channel;
+    // Reads, saves, creates, renames, and deletes files via JSON-RPC/LSP
+  }
+  ```
+
+### 3. TerminalService (`lib/services/terminal_service.dart`)
+- **Current Mock**: `MockTerminalService` streams ANSI dev server output and bash prompts to the `xterm` buffer.
+- **Production Implementation**:
+  - Connect directly to the container's pty via WebSocket: `wss://<container-host>/terminals/<session-id>`.
+  - Pass user keystrokes from `terminal.onOutput` directly over the WebSocket binary/text stream:
+  ```dart
+  class WebSocketTerminalService implements TerminalService {
+    @override
+    Stream<String> getOutput(String sessionId) {
+      final ws = IOWebSocketChannel.connect('wss://$host/api/terminals/$sessionId/pty');
+      return ws.stream.map((event) => event.toString());
+    }
+
+    @override
+    void sendInput(String sessionId, String input) {
+      _sockets[sessionId]?.sink.add(input);
+    }
+  }
+  ```
+
+### 4. PreviewService (`lib/services/preview_service.dart`)
+- **Current Mock**: `MockPreviewService` simulates HMR updates, console warnings, and device framing.
+- **Production Implementation**:
+  - Integrate `webview_flutter` on iOS and Android:
+    ```dart
+    NavigationDelegate(
+      onPageFinished: (url) => ref.read(previewStateNotifierProvider.notifier).reload(),
+    );
+    ```
+  - Forward browser console logs using a JavaScript channel:
+    ```dart
+    controller.addJavaScriptChannel('DevToolsConsole', onMessageReceived: (msg) {
+      // Parse console.log, console.warn, console.error into ConsoleLogEntry
+    });
+    ```
+  - Point the URL to the container's HTTPS reverse proxy (e.g. `https://5173-<id>.preview.cloudcraft.dev`).
+
+### 5. AiService (`lib/services/ai_service.dart`)
+- **Current Mock**: Generates realistic Agent actions, context chips, and unified diff files.
+- **Production Implementation**:
+  - Connect to an AI Agent backend (e.g. Anthropic Claude 3.7 Sonnet / OpenAI / Gemini streaming API).
+  - The agent emits tool calls (`editFile`, `createFile`, `runTerminalCommand`).
+  - Calculate unified diffs using standard git diff (`git diff`) on the container and surface them to the `DiffReviewScreen`.
+
+---
+
+## Running the App
+
+```bash
+cd ui
+flutter pub get
+flutter test
+flutter run
+```
+Available target platforms: Android, iOS, Windows desktop, and Web (Chrome).

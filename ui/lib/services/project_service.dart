@@ -229,6 +229,6 @@ final currentProjectProvider = StateProvider<Project?>((ref) {
   return projectsState.when(
     data: (list) => list.isNotEmpty ? list.first : null,
     loading: () => null,
-    error: (_, __) => null,
+    error: (_, _) => null,
   );
 });

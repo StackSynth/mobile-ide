@@ -18,11 +18,10 @@ class AppTheme {
   }
 
   static ThemeData darkTheme({double fontSize = 13.0, String fontFamily = 'JetBrains Mono'}) {
-    final textTheme = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
-
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: GoogleFonts.inter().fontFamily,
       scaffoldBackgroundColor: AppColors.darkBg,
       primaryColor: AppColors.primary,
       colorScheme: const ColorScheme.dark(
@@ -96,26 +95,26 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.accentCyan, width: 1.5),
         ),
       ),
-      textTheme: textTheme.copyWith(
-        titleLarge: const TextStyle(
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
           color: AppColors.darkTextPrimary,
           fontWeight: FontWeight.w700,
           fontSize: 20,
         ),
-        titleMedium: const TextStyle(
+        titleMedium: TextStyle(
           color: AppColors.darkTextPrimary,
           fontWeight: FontWeight.w600,
           fontSize: 16,
         ),
-        bodyLarge: const TextStyle(
+        bodyLarge: TextStyle(
           color: AppColors.darkTextPrimary,
           fontSize: 15,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           color: AppColors.darkTextSecondary,
           fontSize: 13,
         ),
-        bodySmall: const TextStyle(
+        bodySmall: TextStyle(
           color: AppColors.darkTextMuted,
           fontSize: 11,
         ),
@@ -124,11 +123,10 @@ class AppTheme {
   }
 
   static ThemeData lightTheme({double fontSize = 13.0, String fontFamily = 'JetBrains Mono'}) {
-    final textTheme = GoogleFonts.interTextTheme(ThemeData.light().textTheme);
-
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      fontFamily: GoogleFonts.inter().fontFamily,
       scaffoldBackgroundColor: AppColors.lightBg,
       primaryColor: AppColors.primary,
       colorScheme: const ColorScheme.light(
@@ -202,26 +200,26 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
-      textTheme: textTheme.copyWith(
-        titleLarge: const TextStyle(
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
           color: AppColors.lightTextPrimary,
           fontWeight: FontWeight.w700,
           fontSize: 20,
         ),
-        titleMedium: const TextStyle(
+        titleMedium: TextStyle(
           color: AppColors.lightTextPrimary,
           fontWeight: FontWeight.w600,
           fontSize: 16,
         ),
-        bodyLarge: const TextStyle(
+        bodyLarge: TextStyle(
           color: AppColors.lightTextPrimary,
           fontSize: 15,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           color: AppColors.lightTextSecondary,
           fontSize: 13,
         ),
-        bodySmall: const TextStyle(
+        bodySmall: TextStyle(
           color: AppColors.lightTextMuted,
           fontSize: 11,
         ),

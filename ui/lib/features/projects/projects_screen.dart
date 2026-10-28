@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/status_chip.dart';
 import '../../core/widgets/empty_state_view.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import '../../models/project.dart';
 import '../../services/project_service.dart';
 import 'new_project_sheet.dart';
@@ -74,6 +75,7 @@ class ProjectsScreen extends ConsumerWidget {
           ],
         ),
         actions: [
+          const CmdPaletteButton(),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Settings',

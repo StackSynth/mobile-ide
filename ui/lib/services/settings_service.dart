@@ -15,6 +15,7 @@ class SettingsState {
   final double ramLimitGb;
   final double diskUsedGb;
   final double diskLimitGb;
+  final String cmdButtonPosition; // 'top', 'floating', 'hidden'
 
   const SettingsState({
     this.themeMode = ThemeMode.dark,
@@ -30,6 +31,7 @@ class SettingsState {
     this.ramLimitGb = 8.0,
     this.diskUsedGb = 5.8,
     this.diskLimitGb = 25.0,
+    this.cmdButtonPosition = 'top',
   });
 
   SettingsState copyWith({
@@ -46,6 +48,7 @@ class SettingsState {
     double? ramLimitGb,
     double? diskUsedGb,
     double? diskLimitGb,
+    String? cmdButtonPosition,
   }) {
     return SettingsState(
       themeMode: themeMode ?? this.themeMode,
@@ -61,6 +64,7 @@ class SettingsState {
       ramLimitGb: ramLimitGb ?? this.ramLimitGb,
       diskUsedGb: diskUsedGb ?? this.diskUsedGb,
       diskLimitGb: diskLimitGb ?? this.diskLimitGb,
+      cmdButtonPosition: cmdButtonPosition ?? this.cmdButtonPosition,
     );
   }
 }
@@ -92,6 +96,10 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setAiModel(String model) {
     state = state.copyWith(aiModel: model);
+  }
+
+  void setCmdButtonPosition(String position) {
+    state = state.copyWith(cmdButtonPosition: position);
   }
 }
 

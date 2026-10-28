@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../models/file_node.dart';
 import '../../services/file_service.dart';
 import '../../services/project_service.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import 'file_context_menu.dart';
 
 class FilesScreen extends ConsumerStatefulWidget {
@@ -305,6 +306,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
           ],
         ),
         actions: [
+          const CmdPaletteButton(),
           IconButton(
             icon: const Icon(Icons.note_add_outlined),
             tooltip: 'New File',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import '../../models/preview_state.dart';
 import '../../services/preview_service.dart';
 import 'console_drawer.dart';
@@ -93,6 +94,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
           ),
         ),
         actions: [
+          const CmdPaletteButton(),
           // Device-size toggle (Phone, Tablet, Desktop)
           PopupMenuButton<DevicePreviewSize>(
             icon: Icon(

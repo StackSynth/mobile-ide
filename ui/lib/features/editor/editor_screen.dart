@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state_view.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import '../../services/file_service.dart';
 import '../../services/ai_service.dart';
 import '../../services/settings_service.dart';
@@ -221,6 +222,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           ],
         ),
         actions: [
+          const CmdPaletteButton(),
           // Save button
           IconButton(
             icon: const Icon(Icons.save_outlined, size: 20),

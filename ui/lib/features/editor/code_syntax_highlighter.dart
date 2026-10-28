@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 class CodeSyntaxHighlighter extends TextEditingController {
   final Map<RegExp, TextStyle> _patterns = {};
 
-  CodeSyntaxHighlighter({String? text}) : super(text: text) {
+  CodeSyntaxHighlighter({super.text}) {
     _initPatterns();
   }
 
@@ -16,13 +16,13 @@ class CodeSyntaxHighlighter extends TextEditingController {
     // Builtins / Booleans / Null
     final builtins = RegExp(r'\b(true|false|null|undefined|void|any|string|number|boolean)\b');
     // Strings
-    final strings = RegExp(r'("(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\'|`(?:[^`\\]|\\.)*`)');
+    final strings = RegExp(r'''("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)''');
     // Numbers
     final numbers = RegExp(r'\b\d+(\.\d+)?\b');
     // JSX / TSX tags
-    final tags = RegExp(r'(<\/?[a-zA-Z0-9_\-]+|\/?>)');
+    final tags = RegExp(r'(</?[a-zA-Z0-9_\-]+|/?>)');
     // Comments
-    final comments = RegExp(r'(\/\/.*|\/\*[\s\S]*?\*\/)');
+    final comments = RegExp(r'(//.*|/\*[\s\S]*?\*/)');
     // Functions
     final functions = RegExp(r'\b([a-zA-Z0-9_]+)(?=\s*\()');
 
@@ -51,7 +51,7 @@ class CodeSyntaxHighlighter extends TextEditingController {
     // Split lines or tokens
     int currentPos = 0;
     final combinedRegex = RegExp(
-      r'(\/\/.*|\/\*[\s\S]*?\*\/)|("(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\'|`(?:[^`\\]|\\.)*`)|(\b(?:import|export|from|default|return|const|let|var|function|class|interface|type|extends|implements|if|else|for|while|switch|case|break|try|catch|finally|async|await|yield|new|this|typeof|instanceof)\b)|(\b(?:true|false|null|undefined|void|any|string|number|boolean)\b)|(<\/?[a-zA-Z0-9_\-]+|\/?>)|(\b\d+(\.\d+)?\b)|(\b[a-zA-Z0-9_]+(?=\s*\())',
+      r'''(//.*|/\*[\s\S]*?\*/)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b(?:import|export|from|default|return|const|let|var|function|class|interface|type|extends|implements|if|else|for|while|switch|case|break|try|catch|finally|async|await|yield|new|this|typeof|instanceof)\b)|(\b(?:true|false|null|undefined|void|any|string|number|boolean)\b)|(</?[a-zA-Z0-9_\-]+|/?>)|(\b\d+(\.\d+)?\b)|(\b[a-zA-Z0-9_]+(?=\s*\())''',
       multiLine: true,
     );
 

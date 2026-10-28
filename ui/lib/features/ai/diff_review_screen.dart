@@ -50,6 +50,22 @@ class _DiffReviewScreenState extends ConsumerState<DiffReviewScreen> {
           ],
         ),
         actions: [
+          if (diffs.length > 1) ...[
+            IconButton(
+              icon: const Icon(Icons.chevron_left_rounded),
+              tooltip: 'Previous Diff',
+              onPressed: safeIndex > 0
+                  ? () => setState(() => _currentIndex = safeIndex - 1)
+                  : null,
+            ),
+            IconButton(
+              icon: const Icon(Icons.chevron_right_rounded),
+              tooltip: 'Next Diff',
+              onPressed: safeIndex < diffs.length - 1
+                  ? () => setState(() => _currentIndex = safeIndex + 1)
+                  : null,
+            ),
+          ],
           TextButton.icon(
             onPressed: () {
               ref.read(aiChatProvider.notifier).acceptAll();

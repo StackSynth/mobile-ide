@@ -208,7 +208,7 @@ class _CommandPaletteSheetState extends ConsumerState<CommandPaletteSheet> {
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: filtered.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final item = filtered[index];
                       return ListTile(

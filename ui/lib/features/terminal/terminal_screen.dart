@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:xterm/xterm.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/connection_status_banner.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import '../../models/terminal_session.dart';
 import '../../services/terminal_service.dart';
 import 'terminal_key_row.dart';
@@ -175,6 +176,7 @@ class _TerminalScreenState extends ConsumerState<TerminalScreen> with TickerProv
           ],
         ),
         actions: [
+          const CmdPaletteButton(),
           IconButton(
             icon: const Icon(Icons.add_rounded, size: 22),
             tooltip: 'New Terminal Tab',
@@ -250,7 +252,7 @@ class _TerminalScreenState extends ConsumerState<TerminalScreen> with TickerProv
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               itemCount: _quickCommands.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 6),
+              separatorBuilder: (_, _) => const SizedBox(width: 6),
               itemBuilder: (context, index) {
                 final cmd = _quickCommands[index];
                 return ActionChip(

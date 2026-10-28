@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/command_palette_sheet.dart';
-import '../../services/project_service.dart';
+import '../../services/settings_service.dart';
 
 class AppShell extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
@@ -23,7 +23,6 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final currentProject = ref.watch(currentProjectProvider);
     final width = MediaQuery.of(context).size.width;
     final isTablet = width >= 720;
 
@@ -138,16 +137,19 @@ class AppShell extends ConsumerWidget {
       );
     }
 
+    final settings = ref.watch(settingsProvider);
+
     return Scaffold(
       body: Stack(
         children: [
           navigationShell,
 
-          // Floating Command Palette Button (thumb friendly, bottom right above nav bar)
-          Positioned(
-            right: 16,
-            bottom: 12,
-            child: Material(
+          // Optional Floating Command Palette Button (when configured as floating)
+          if (settings.cmdButtonPosition == 'floating')
+            Positioned(
+              right: 16,
+              bottom: 12,
+              child: Material(
               color: Colors.transparent,
               child: Ink(
                 decoration: BoxDecoration(

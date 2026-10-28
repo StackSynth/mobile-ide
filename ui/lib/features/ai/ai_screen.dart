@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/cmd_palette_button.dart';
 import '../../models/ai_message.dart';
 import '../../models/file_diff.dart';
 import '../../services/ai_service.dart';
@@ -73,6 +74,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
           ],
         ),
         actions: [
+          const CmdPaletteButton(),
           if (pendingDiffCount > 0)
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
@@ -271,7 +273,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               itemCount: _promptSuggestions.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 6),
+              separatorBuilder: (_, _) => const SizedBox(width: 6),
               itemBuilder: (context, index) {
                 final suggestion = _promptSuggestions[index];
                 return InkWell(
