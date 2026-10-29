@@ -250,6 +250,137 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: 20),
+
+          // Terminal & Container Settings
+          _buildSectionHeader('Terminal & Container'),
+          Container(
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: borderColor),
+            ),
+            child: Column(
+              children: [
+                // Terminal Username
+                ListTile(
+                  leading: const Icon(Icons.person_outline_rounded, size: 20, color: AppColors.primaryLight),
+                  title: const Text('Username', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  subtitle: Text(settings.terminalUsername, style: const TextStyle(fontSize: 12, color: AppColors.darkTextMuted)),
+                  trailing: const Icon(Icons.edit_rounded, size: 16, color: AppColors.darkTextMuted),
+                  onTap: () => _showEditDialog(
+                    context: context,
+                    ref: ref,
+                    title: 'Terminal Username',
+                    currentValue: settings.terminalUsername,
+                    hint: 'e.g. developer, root, myname',
+                    onSave: (val) => ref.read(settingsProvider.notifier).setTerminalUsername(val),
+                  ),
+                ),
+                const Divider(height: 1),
+
+                // Container Hostname
+                ListTile(
+                  leading: const Icon(Icons.dns_outlined, size: 20, color: AppColors.primaryLight),
+                  title: const Text('Container Hostname', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  subtitle: Text(settings.containerHostname, style: const TextStyle(fontSize: 12, color: AppColors.darkTextMuted)),
+                  trailing: const Icon(Icons.edit_rounded, size: 16, color: AppColors.darkTextMuted),
+                  onTap: () => _showEditDialog(
+                    context: context,
+                    ref: ref,
+                    title: 'Container Hostname',
+                    currentValue: settings.containerHostname,
+                    hint: 'e.g. stack-container, my-dev-box',
+                    onSave: (val) => ref.read(settingsProvider.notifier).setContainerHostname(val),
+                  ),
+                ),
+                const Divider(height: 1),
+
+                // Workspace Path
+                ListTile(
+                  leading: const Icon(Icons.folder_outlined, size: 20, color: AppColors.primaryLight),
+                  title: const Text('Workspace Path', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  subtitle: Text(settings.workspacePath, style: const TextStyle(fontSize: 12, color: AppColors.darkTextMuted)),
+                  trailing: const Icon(Icons.edit_rounded, size: 16, color: AppColors.darkTextMuted),
+                  onTap: () => _showEditDialog(
+                    context: context,
+                    ref: ref,
+                    title: 'Workspace Path',
+                    currentValue: settings.workspacePath,
+                    hint: 'e.g. ~/workspace/my-project',
+                    onSave: (val) => ref.read(settingsProvider.notifier).setWorkspacePath(val),
+                  ),
+                ),
+                const Divider(height: 1),
+
+                // Prompt Preview
+                Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Prompt Preview', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.darkTextMuted)),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${settings.terminalUsername}@${settings.containerHostname}:${settings.workspacePath}\$ ',
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                            color: AppColors.accentCyan,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditDialog({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String title,
+    required String currentValue,
+    required String hint,
+    required ValueChanged<String> onSave,
+  }) {
+    final controller = TextEditingController(text: currentValue);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(hintText: hint),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final val = controller.text.trim();
+              if (val.isNotEmpty) {
+                onSave(val);
+              }
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/terminal_session.dart';
+import 'settings_service.dart';
 
 abstract class TerminalService {
   Future<List<TerminalSession>> getSessions();
@@ -13,6 +14,10 @@ abstract class TerminalService {
 
 class MockTerminalService implements TerminalService {
   final Map<String, StreamController<String>> _outputControllers = {};
+  String _prompt = '\x1b[38;5;114mdeveloper@stack-container\x1b[0m:\x1b[38;5;39m~/workspace/react-shop\x1b[0m\$ ';
+
+  /// Update the terminal prompt dynamically from user settings.
+  set prompt(String newPrompt) => _prompt = newPrompt;
   final List<TerminalSession> _sessions = [
     const TerminalSession(
       id: 'term_dev',
@@ -61,7 +66,7 @@ class MockTerminalService implements TerminalService {
     _outputControllers[id] = controller;
 
     Timer(const Duration(milliseconds: 100), () {
-      controller.add('\\x1b[38;5;114mdeveloper@stack-container\\x1b[0m:\\x1b[38;5;39m~/workspace/react-shop\\x1b[0m\$ ');
+      controller.add(_prompt);
     });
   }
 
@@ -93,14 +98,50 @@ class MockTerminalService implements TerminalService {
   @override
   void sendInput(String sessionId, String input) {
     final controller = _outputControllers[sessionId];
-    if (controller != null && !controller.isClosed) {
-      if (input == '\\r' || input == '\\n') {
-        controller.add('\\r\\n');
-        controller.add('\\x1b[38;5;114mdeveloper@stack-container\\x1b[0m:\\x1b[38;5;39m~/workspace\\x1b[0m\$ ');
-      } else {
-        controller.add(input);
-      }
+    if (controller == null || controller.isClosed) return;
+
+    // Esc key: avoid placing raw escape codes on the screen
+    if (input == '\x1b') {
+      return;
     }
+
+    // Ctrl+C (SIGINT)
+    if (input == '\x03') {
+      controller.add('^C\r\n$_prompt');
+      return;
+    }
+
+    // Command submission (ends with newline/carriage return)
+    if (input.endsWith('\r\n') || input.endsWith('\n') || input.endsWith('\r') || input.endsWith('\\r\\n') || input.endsWith('\\n') || input.endsWith('\\r')) {
+      final cmd = input.replaceAll(RegExp(r'[\r\n\\]'), ' ').trim();
+      if (cmd.isEmpty) {
+        controller.add('\r\n$_prompt');
+        return;
+      }
+
+      if (cmd == 'clear') {
+        controller.add('\x1b[2J\x1b[H$_prompt');
+        return;
+      }
+
+      controller.add('$cmd\r\n');
+      if (cmd == 'pnpm dev') {
+        controller.add('\x1b[38;5;81m  VITE v6.2.0\x1b[0m  ready in \x1b[32m125 ms\x1b[0m\r\n\r\n  \x1b[32m➜\x1b[0m  \x1b[1mLocal:\x1b[0m   http://localhost:\x1b[1;36m5173\x1b[0m/\r\n  \x1b[32m➜\x1b[0m  \x1b[1mNetwork:\x1b[0m http://172.18.0.2:\x1b[1;36m5173\x1b[0m/\r\n');
+      } else if (cmd == 'pnpm install') {
+        controller.add('\x1b[2mResolving dependencies...\x1b[0m\r\n\x1b[32m✔ All dependencies are installed and up to date\x1b[0m\r\n');
+      } else if (cmd == 'git status') {
+        controller.add('On branch main\r\nYour branch is up to date with \'origin/main\'.\r\n\x1b[32mworking tree clean\x1b[0m\r\n');
+      } else if (cmd == 'pnpm build') {
+        controller.add('\x1b[2mvite v6.2.0 building for production...\x1b[0m\r\n\x1b[32m✓ 48 modules transformed.\x1b[0m\r\n\x1b[32m✓ built in 340ms\x1b[0m\r\n');
+      } else if (cmd.startsWith('git commit')) {
+        controller.add('[main 4a8f9c2] update files\r\n 2 files changed, 14 insertions(+)\r\n');
+      }
+      controller.add(_prompt);
+      return;
+    }
+
+    // Regular character input
+    controller.add(input);
   }
 
   @override
@@ -125,7 +166,10 @@ class MockTerminalService implements TerminalService {
 }
 
 final terminalServiceProvider = Provider<TerminalService>((ref) {
-  return MockTerminalService();
+  final settings = ref.watch(settingsProvider);
+  final service = MockTerminalService();
+  service.prompt = settings.terminalPrompt;
+  return service;
 });
 
 class TerminalStateNotifier extends StateNotifier<List<TerminalSession>> {

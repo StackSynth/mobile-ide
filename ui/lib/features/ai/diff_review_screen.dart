@@ -206,7 +206,7 @@ class _DiffReviewScreenState extends ConsumerState<DiffReviewScreen> {
               child: Container(
                 margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF070A0F) : Colors.white,
+                  color: isDark ? AppColors.darkBg : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: borderColor),
                 ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,6 +32,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   double _baseScale = 1.0;
   bool _hasSelection = false;
   String _selectedText = '';
+  Timer? _autosaveTimer;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   @override
   void dispose() {
+    _autosaveTimer?.cancel();
     _codeController.removeListener(_handleTextAndSelectionChange);
     _codeController.dispose();
     _editorFocusNode.dispose();
@@ -69,6 +72,13 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     final activeTab = ref.read(openTabsProvider).activeTab;
     if (activeTab != null && _codeController.text != activeTab.content) {
       ref.read(openTabsProvider.notifier).updateActiveContent(_codeController.text);
+      // Autosave after 1s of no typing
+      _autosaveTimer?.cancel();
+      _autosaveTimer = Timer(const Duration(seconds: 1), () {
+        if (mounted) {
+          ref.read(openTabsProvider.notifier).saveActiveTab();
+        }
+      });
     }
   }
 

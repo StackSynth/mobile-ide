@@ -16,6 +16,9 @@ class SettingsState {
   final double diskUsedGb;
   final double diskLimitGb;
   final String cmdButtonPosition; // 'top', 'floating', 'hidden'
+  final String terminalUsername;
+  final String containerHostname;
+  final String workspacePath;
 
   const SettingsState({
     this.themeMode = ThemeMode.dark,
@@ -32,6 +35,9 @@ class SettingsState {
     this.diskUsedGb = 5.8,
     this.diskLimitGb = 25.0,
     this.cmdButtonPosition = 'top',
+    this.terminalUsername = 'developer',
+    this.containerHostname = 'stack-container',
+    this.workspacePath = '~/workspace/react-shop',
   });
 
   SettingsState copyWith({
@@ -49,6 +55,9 @@ class SettingsState {
     double? diskUsedGb,
     double? diskLimitGb,
     String? cmdButtonPosition,
+    String? terminalUsername,
+    String? containerHostname,
+    String? workspacePath,
   }) {
     return SettingsState(
       themeMode: themeMode ?? this.themeMode,
@@ -65,8 +74,15 @@ class SettingsState {
       diskUsedGb: diskUsedGb ?? this.diskUsedGb,
       diskLimitGb: diskLimitGb ?? this.diskLimitGb,
       cmdButtonPosition: cmdButtonPosition ?? this.cmdButtonPosition,
+      terminalUsername: terminalUsername ?? this.terminalUsername,
+      containerHostname: containerHostname ?? this.containerHostname,
+      workspacePath: workspacePath ?? this.workspacePath,
     );
   }
+
+  /// Full prompt string for terminal display, e.g. "developer@stack-container:~/workspace/react-shop$"
+  String get terminalPrompt =>
+      '\x1b[38;5;114m$terminalUsername@$containerHostname\x1b[0m:\x1b[38;5;39m$workspacePath\x1b[0m\$ ';
 }
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
@@ -100,6 +116,18 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setCmdButtonPosition(String position) {
     state = state.copyWith(cmdButtonPosition: position);
+  }
+
+  void setTerminalUsername(String username) {
+    state = state.copyWith(terminalUsername: username);
+  }
+
+  void setContainerHostname(String hostname) {
+    state = state.copyWith(containerHostname: hostname);
+  }
+
+  void setWorkspacePath(String path) {
+    state = state.copyWith(workspacePath: path);
   }
 }
 

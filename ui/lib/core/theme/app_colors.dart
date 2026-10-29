@@ -10,13 +10,13 @@ class AppColors {
   static const Color accentPurple = Color(0xFFA855F7);
   static const Color accentPink = Color(0xFFEC4899);
 
-  // Dark Theme Palette (Default - High Contrast & Calm)
-  static const Color darkBg = Color(0xFF0B0F17); // Deep OLED navy
-  static const Color darkSurface = Color(0xFF131926);
-  static const Color darkSurfaceElevated = Color(0xFF1E2638);
-  static const Color darkCard = Color(0xFF182030);
-  static const Color darkBorder = Color(0xFF283347);
-  static const Color darkBorderHighlight = Color(0xFF3B4861);
+  // Dark Theme Palette (Default - High Contrast & Pure Black)
+  static const Color darkBg = Color(0xFF000000); // Fully black (Pure OLED)
+  static const Color darkSurface = Color(0xFF0D0E12); // Deep neutral dark surface
+  static const Color darkSurfaceElevated = Color(0xFF181A20);
+  static const Color darkCard = Color(0xFF121418);
+  static const Color darkBorder = Color(0xFF22252C);
+  static const Color darkBorderHighlight = Color(0xFF353945);
   
   static const Color darkTextPrimary = Color(0xFFF8FAFC);
   static const Color darkTextSecondary = Color(0xFF94A3B8);
@@ -46,10 +46,10 @@ class AppColors {
   static const Color gitUntracked = Color(0xFF6366F1);
 
   // Terminal
-  static const Color terminalBg = Color(0xFF070A0F);
+  static const Color terminalBg = Color(0xFF000000);
   static const Color terminalForeground = Color(0xFFE2E8F0);
   static const Color terminalCursor = Color(0xFF38BDF8);
-  static const Color terminalSelection = Color(0xFF283652);
+  static const Color terminalSelection = Color(0xFF22252C);
 
   // Code Syntax Highlighting
   static const Color syntaxKeyword = Color(0xFFFF7B72);

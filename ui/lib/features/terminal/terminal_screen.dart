@@ -88,11 +88,11 @@ class _TerminalScreenState extends ConsumerState<TerminalScreen> with TickerProv
     final activeIndex = _tabController.index;
     if (activeIndex >= 0 && activeIndex < sessions.length) {
       final session = sessions[activeIndex];
-      final terminal = _terminals[session.id];
-      terminal?.write('$command\r\n');
+      // sendInput routes to the service stream listener which writes to terminal once, preventing duplication
       ref.read(terminalServiceProvider).sendInput(session.id, '$command\r\n');
       ref.read(terminalSessionsProvider.notifier).addCommandToHistory(session.id, command);
       _commandInputController.clear();
+      FocusScope.of(context).unfocus();
     }
   }
 
@@ -101,8 +101,6 @@ class _TerminalScreenState extends ConsumerState<TerminalScreen> with TickerProv
     final activeIndex = _tabController.index;
     if (activeIndex >= 0 && activeIndex < sessions.length) {
       final session = sessions[activeIndex];
-      final terminal = _terminals[session.id];
-      terminal?.write(key);
       ref.read(terminalServiceProvider).sendInput(session.id, key);
     }
   }
@@ -316,6 +314,7 @@ class _TerminalScreenState extends ConsumerState<TerminalScreen> with TickerProv
                 Expanded(
                   child: TextField(
                     controller: _commandInputController,
+                    textInputAction: TextInputAction.send,
                     style: const TextStyle(
                       fontFamily: 'monospace',
                       fontSize: 13,

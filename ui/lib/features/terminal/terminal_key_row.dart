@@ -38,13 +38,25 @@ class TerminalKeyRow extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
         children: [
+          // Exit / Hide Mobile Keyboard button
+          _buildSpecialKey(
+            label: 'Exit',
+            icon: Icons.keyboard_hide_rounded,
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            keyBg: keyBg,
+            textColor: AppColors.accentCyan,
+          ),
+          const SizedBox(width: 4),
+
           // Command History Sheet trigger
           _buildSpecialKey(
             label: 'History',
             icon: Icons.history_rounded,
             onTap: onToggleHistory,
             keyBg: keyBg,
-            textColor: AppColors.accentCyan,
+            textColor: textColor,
           ),
           const SizedBox(width: 4),
 
@@ -75,10 +87,23 @@ class TerminalKeyRow extends StatelessWidget {
           ),
           const SizedBox(width: 4),
 
-          // Esc key
+          if (isCtrlActive) ...[
+            _buildSpecialKey(
+              label: '^C',
+              onTap: () => onKeyPress('\x03'),
+              keyBg: AppColors.error.withOpacity(0.2),
+              textColor: AppColors.error,
+            ),
+            const SizedBox(width: 4),
+          ],
+
+          // Esc key (unfocuses keyboard and cancels without placing escape code)
           _buildSpecialKey(
             label: 'Esc',
-            onTap: () => onKeyPress('\x1b'),
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              onKeyPress('\x1b');
+            },
             keyBg: keyBg,
             textColor: textColor,
           ),

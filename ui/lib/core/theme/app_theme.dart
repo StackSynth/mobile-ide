@@ -72,6 +72,10 @@ class AppTheme {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: AppColors.darkSurface,
+        surfaceTintColor: Colors.transparent,
+      ),
       dividerTheme: const DividerThemeData(
         color: AppColors.darkBorder,
         thickness: 1,
@@ -176,6 +180,10 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
+      ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: AppColors.lightSurface,
+        surfaceTintColor: Colors.transparent,
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.lightBorder,
