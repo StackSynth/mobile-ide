@@ -29,7 +29,7 @@ class ProjectsScreen extends ConsumerWidget {
     if (stack.contains('next')) return Icons.layers_rounded;
     if (stack.contains('python')) return Icons.data_object_rounded;
     if (stack.contains('flutter')) return Icons.flutter_dash_rounded;
-    return Icons.folder_rounded;
+    return Icons.terminal_rounded;
   }
 
   @override
@@ -191,7 +191,7 @@ class ProjectsScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: isCurrent
-                                ? AppColors.primary
+                                ? (isDark ? const Color(0xFF4B5563) : const Color(0xFF6B7280))
                                 : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                             width: isCurrent ? 1.5 : 1,
                           ),

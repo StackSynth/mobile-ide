@@ -200,7 +200,7 @@ class _FileCreationDialogState extends State<FileCreationDialog> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primaryLight, width: 1.5),
+                  borderSide: const BorderSide(color: Color(0xFF4B5563), width: 1.5),
                 ),
               ),
             ),

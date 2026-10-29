@@ -8,7 +8,6 @@ import '../../core/widgets/cmd_palette_button.dart';
 import '../../services/project_service.dart';
 import 'models/file_node.dart';
 import 'providers/file_tree_notifier.dart';
-import 'providers/file_tree_state.dart';
 import '../../services/file_service.dart' show openTabsProvider;
 import 'file_context_menu.dart';
 import 'widgets/file_creation_dialog.dart';
@@ -240,7 +239,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                           final newPath = parent == '/' ? '/$newName' : '$parent/$newName';
                           await ref.read(fileTreeNotifierProvider.notifier).rename(node.path, newName);
                           ref.read(openTabsProvider.notifier).handleFileRenamed(node.path, newPath, newName);
-                          if (mounted) Navigator.pop(ctx);
+                          if (ctx.mounted) Navigator.pop(ctx);
                         } catch (e) {
                           setDialogState(() => errorMsg = e.toString().replaceFirst('FileSystemException: ', ''));
                         }

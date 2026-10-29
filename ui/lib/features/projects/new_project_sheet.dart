@@ -3,22 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../services/project_service.dart';
 
-class ProjectTemplate {
-  final String id;
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-
-  const ProjectTemplate({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-  });
-}
-
 class NewProjectSheet extends ConsumerStatefulWidget {
   const NewProjectSheet({super.key});
 
@@ -36,54 +20,8 @@ class NewProjectSheet extends ConsumerStatefulWidget {
 }
 
 class _NewProjectSheetState extends ConsumerState<NewProjectSheet> {
-  final TextEditingController _nameController = TextEditingController(text: 'my-mobile-app');
-  String _selectedTemplate = 'React + Vite';
+  final TextEditingController _nameController = TextEditingController(text: 'my-project');
   bool _isCreating = false;
-
-  final List<ProjectTemplate> _templates = const [
-    ProjectTemplate(
-      id: 'React + Vite',
-      title: 'React + Vite',
-      description: 'Lightning fast React 19 SPA with Tailwind CSS & hot module reload',
-      icon: Icons.flash_on_rounded,
-      color: Color(0xFF38BDF8),
-    ),
-    ProjectTemplate(
-      id: 'Next.js',
-      title: 'Next.js 15',
-      description: 'Fullstack App Router, React Server Components & API routes',
-      icon: Icons.layers_rounded,
-      color: Color(0xFFF8FAFC),
-    ),
-    ProjectTemplate(
-      id: 'Node API',
-      title: 'Node.js API',
-      description: 'Lightweight Express / Hono TypeScript backend with container sandbox',
-      icon: Icons.code_rounded,
-      color: Color(0xFF10B981),
-    ),
-    ProjectTemplate(
-      id: 'Python',
-      title: 'Python FastAPI',
-      description: 'Modern asynchronous Python REST API with auto OpenAPI docs',
-      icon: Icons.terminal_rounded,
-      color: Color(0xFFF59E0B),
-    ),
-    ProjectTemplate(
-      id: 'Flutter web',
-      title: 'Flutter Web',
-      description: 'Cross-platform canvas kit web application with Riverpod',
-      icon: Icons.flutter_dash_rounded,
-      color: Color(0xFF6366F1),
-    ),
-    ProjectTemplate(
-      id: 'Blank',
-      title: 'Blank Workspace',
-      description: 'Minimal Alpine Linux container with git, bash, node and python',
-      icon: Icons.crop_square_rounded,
-      color: Color(0xFF94A3B8),
-    ),
-  ];
 
   @override
   void dispose() {
@@ -98,7 +36,7 @@ class _NewProjectSheetState extends ConsumerState<NewProjectSheet> {
     setState(() => _isCreating = true);
     final proj = await ref
         .read(projectsNotifierProvider.notifier)
-        .createProject(name, _selectedTemplate);
+        .createProject(name, 'custom');
     if (mounted) {
       setState(() => _isCreating = false);
       if (proj != null) {
@@ -106,8 +44,8 @@ class _NewProjectSheetState extends ConsumerState<NewProjectSheet> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Created ${proj.name}! Starting container...'),
-            backgroundColor: AppColors.primary,
+            content: Text('Created ${proj.name}! Open Terminal to configure environment.'),
+            backgroundColor: const Color(0xFF1F2937),
           ),
         );
       }
@@ -118,196 +56,192 @@ class _NewProjectSheetState extends ConsumerState<NewProjectSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    // Dark gray outline border color
+    final darkGrayBorder = isDark ? const Color(0xFF374151) : const Color(0xFF4B5563);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: darkGrayBorder),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkBorderHighlight : AppColors.lightBorderHighlight,
-                borderRadius: BorderRadius.circular(2),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: darkGrayBorder,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Create New Project',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Spin up an isolated cloud container',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.darkTextMuted,
-                          ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close_rounded),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 12),
-          const Divider(),
-
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                const Text(
-                  'Project Name',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.folder_open_rounded, size: 20),
-                    hintText: 'e.g. mobile-storefront',
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-                const Text(
-                  'Select Starter Template',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                ),
-                const SizedBox(height: 10),
-
-                ..._templates.map((tpl) {
-                  final isSelected = _selectedTemplate == tpl.id;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() => _selectedTemplate = tpl.id);
-                      },
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primary.withOpacity(0.12)
-                              : (isDark ? AppColors.darkCard : AppColors.lightCard),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isSelected ? AppColors.primary : borderColor,
-                            width: isSelected ? 1.5 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: tpl.color.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Icon(tpl.icon, color: tpl.color, size: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Create New Project',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tpl.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    tpl.description,
-                                    style: const TextStyle(
-                                      fontSize: 11.5,
-                                      color: AppColors.darkTextMuted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Radio<String>(
-                              value: tpl.id,
-                              groupValue: _selectedTemplate,
-                              activeColor: AppColors.primary,
-                              onChanged: (val) {
-                                if (val != null) setState(() => _selectedTemplate = val);
-                              },
-                            ),
-                          ],
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Spin up an isolated container workspace',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.darkTextMuted,
                         ),
                       ),
-                    ),
-                  );
-                }),
-              ],
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Bottom Action
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkCard : AppColors.lightCard,
-              border: Border(top: BorderSide(color: borderColor)),
+            const SizedBox(height: 10),
+            Divider(color: darkGrayBorder, height: 1),
+
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Project Name',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _nameController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.folder_open_rounded, size: 20, color: AppColors.accentCyan),
+                      hintText: 'e.g. mobile-project',
+                      filled: true,
+                      fillColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: darkGrayBorder),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: darkGrayBorder),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: darkGrayBorder, width: 1.5),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Environment Setup',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Box with dark gray outline explaining terminal setup
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: darkGrayBorder, width: 1.2),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.black45,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: darkGrayBorder),
+                          ),
+                          child: const Icon(Icons.terminal_rounded, color: AppColors.accentCyan, size: 20),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Terminal-Driven Workspace',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'No predefined framework lock-in. Use the integrated Terminal to set up your environment with any tools you need (Node, Python, Flutter, Rust, etc.).',
+                                style: TextStyle(fontSize: 12, color: AppColors.darkTextMuted, height: 1.35),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: ElevatedButton(
-              onPressed: _isCreating ? null : _handleCreate,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+
+            // Bottom Action
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                border: Border(top: BorderSide(color: darkGrayBorder)),
+              ),
+              child: SizedBox(
+                height: 48,
+                child: FilledButton.icon(
+                  icon: const Icon(Icons.rocket_launch_rounded, size: 18),
+                  label: _isCreating
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Text(
+                          'Create Workspace & Open',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF1E293B), // sleek dark container tone
+                    side: BorderSide(color: darkGrayBorder),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: _isCreating ? null : _handleCreate,
                 ),
               ),
-              child: _isCreating
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                    )
-                  : const Text(
-                      'Launch Container & Open',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

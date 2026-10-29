@@ -77,37 +77,15 @@ class MockProjectService implements ProjectService {
     required String template,
   }) async {
     await Future.delayed(const Duration(milliseconds: 700));
-    String stackLabel = 'React + Vite';
-    String icon = 'react';
+    String stackLabel = 'Workspace';
+    String icon = 'terminal';
     int port = 5173;
-
-    if (template.contains('Next')) {
-      stackLabel = 'Next.js';
-      icon = 'next';
-      port = 3000;
-    } else if (template.contains('Python')) {
-      stackLabel = 'Python';
-      icon = 'python';
-      port = 8000;
-    } else if (template.contains('Node')) {
-      stackLabel = 'Node API';
-      icon = 'node';
-      port = 4000;
-    } else if (template.contains('Flutter')) {
-      stackLabel = 'Flutter Web';
-      icon = 'flutter';
-      port = 8080;
-    } else if (template.contains('Blank')) {
-      stackLabel = 'Blank Workspace';
-      icon = 'blank';
-      port = 8080;
-    }
 
     final newProj = Project(
       id: 'proj_${DateTime.now().millisecondsSinceEpoch}',
       name: name.trim().replaceAll(' ', '-').toLowerCase(),
-      description: '$stackLabel project initialized on cloud container',
-      stack: template.toLowerCase(),
+      description: 'Workspace ready for terminal environment setup',
+      stack: 'workspace',
       stackLabel: stackLabel,
       stackIcon: icon,
       lastOpened: DateTime.now(),

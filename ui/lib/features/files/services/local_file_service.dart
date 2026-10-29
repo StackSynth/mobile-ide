@@ -5,16 +5,16 @@ import '../models/file_node.dart';
 import 'file_service.dart';
 
 class LocalFileService implements FileService {
-  final Future<Directory> Function()? _baseDirProvider;
+  final Future<Directory> Function()? baseDirProvider;
   Directory? _currentProjectDir;
   String? _currentProjectId;
 
-  LocalFileService({Future<Directory> Function()? baseDirProvider})
-      : _baseDirProvider = baseDirProvider;
+  LocalFileService({this.baseDirProvider});
 
   Future<Directory> _getBaseDir() async {
-    if (_baseDirProvider != null) {
-      return await _baseDirProvider!();
+    final provider = baseDirProvider;
+    if (provider != null) {
+      return await provider();
     }
     return await getApplicationDocumentsDirectory();
   }

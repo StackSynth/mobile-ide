@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../features/files/models/file_node.dart';
 import '../features/files/models/open_file_tab.dart';
 import '../features/files/services/file_service.dart';
-import '../features/files/services/local_file_service.dart';
 import '../features/files/providers/file_tree_notifier.dart';
-import '../features/files/providers/file_tree_state.dart';
 
 export '../features/files/models/file_node.dart';
 export '../features/files/models/open_file_tab.dart';
