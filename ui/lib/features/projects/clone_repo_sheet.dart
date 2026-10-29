@@ -45,7 +45,7 @@ class _CloneRepoSheetState extends ConsumerState<CloneRepoSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Cloned ${proj.name}! Workspace ready.'),
-            backgroundColor: AppColors.primary,
+            backgroundColor: const Color(0xFF3A3A3A),
           ),
         );
       }
@@ -91,10 +91,10 @@ class _CloneRepoSheetState extends ConsumerState<CloneRepoSheet> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.12),
+                  color: const Color(0xFF3A3A3A).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.download_rounded, color: AppColors.primaryLight, size: 20),
+                child: const Icon(Icons.download_rounded, color: Colors.white70, size: 20),
               ),
               const SizedBox(width: 12),
               Column(
@@ -131,7 +131,7 @@ class _CloneRepoSheetState extends ConsumerState<CloneRepoSheet> {
           ElevatedButton(
             onPressed: _isCloning ? null : _handleClone,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: const Color(0xFF3A3A3A),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(

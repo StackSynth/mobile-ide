@@ -26,31 +26,36 @@ class AppShell extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final isTablet = width >= 720;
 
-    // 5 primary tabs
+    // 6 primary tabs
     final navItems = const [
       NavigationDestination(
-        icon: Icon(Icons.folder_outlined, size: 22),
-        selectedIcon: Icon(Icons.folder_rounded, size: 22),
+        icon: Icon(Icons.folder_outlined, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.folder_rounded, size: 22, color: Colors.white),
         label: 'Files',
       ),
       NavigationDestination(
-        icon: Icon(Icons.code_rounded, size: 22),
-        selectedIcon: Icon(Icons.code_rounded, size: 22),
+        icon: Icon(Icons.code_rounded, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.code_rounded, size: 22, color: Colors.white),
         label: 'Editor',
       ),
       NavigationDestination(
-        icon: Icon(Icons.terminal_outlined, size: 22),
-        selectedIcon: Icon(Icons.terminal_rounded, size: 22),
+        icon: Icon(Icons.terminal_outlined, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.terminal_rounded, size: 22, color: Colors.white),
         label: 'Terminal',
       ),
       NavigationDestination(
-        icon: Icon(Icons.devices_outlined, size: 22),
-        selectedIcon: Icon(Icons.devices_rounded, size: 22),
+        icon: Icon(Icons.devices_outlined, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.devices_rounded, size: 22, color: Colors.white),
         label: 'Preview',
       ),
       NavigationDestination(
-        icon: Icon(Icons.auto_awesome_outlined, size: 22),
-        selectedIcon: Icon(Icons.auto_awesome_rounded, size: 22),
+        icon: Icon(Icons.extension_outlined, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.extension_rounded, size: 22, color: Colors.white),
+        label: 'Extensions',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.auto_awesome_outlined, size: 22, color: Colors.white),
+        selectedIcon: Icon(Icons.auto_awesome_rounded, size: 22, color: Colors.white),
         label: 'AI',
       ),
     ];
@@ -63,11 +68,12 @@ class AppShell extends ConsumerWidget {
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: (idx) => _onTap(context, idx),
               labelType: NavigationRailLabelType.all,
+              indicatorColor: const Color(0xFF3A3A3A),
               leading: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: IconButton(
                   tooltip: 'Projects',
-                  icon: const Icon(Icons.dashboard_rounded, color: AppColors.primaryLight),
+                  icon: const Icon(Icons.dashboard_rounded, color: Colors.white),
                   onPressed: () => context.push('/projects'),
                 ),
               ),
@@ -78,7 +84,7 @@ class AppShell extends ConsumerWidget {
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: IconButton(
                       tooltip: 'Settings',
-                      icon: const Icon(Icons.settings_outlined),
+                      icon: const Icon(Icons.settings_outlined, color: Colors.white),
                       onPressed: () => context.push('/settings'),
                     ),
                   ),
@@ -86,29 +92,34 @@ class AppShell extends ConsumerWidget {
               ),
               destinations: const [
                 NavigationRailDestination(
-                  icon: Icon(Icons.folder_outlined),
-                  selectedIcon: Icon(Icons.folder_rounded),
-                  label: Text('Files'),
+                  icon: Icon(Icons.folder_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.folder_rounded, color: Colors.white),
+                  label: Text('Files', style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.code_rounded),
-                  selectedIcon: Icon(Icons.code_rounded),
-                  label: Text('Editor'),
+                  icon: Icon(Icons.code_rounded, color: Colors.white),
+                  selectedIcon: Icon(Icons.code_rounded, color: Colors.white),
+                  label: Text('Editor', style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.terminal_outlined),
-                  selectedIcon: Icon(Icons.terminal_rounded),
-                  label: Text('Terminal'),
+                  icon: Icon(Icons.terminal_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.terminal_rounded, color: Colors.white),
+                  label: Text('Terminal', style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.devices_outlined),
-                  selectedIcon: Icon(Icons.devices_rounded),
-                  label: Text('Preview'),
+                  icon: Icon(Icons.devices_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.devices_rounded, color: Colors.white),
+                  label: Text('Preview', style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.auto_awesome_outlined),
-                  selectedIcon: Icon(Icons.auto_awesome_rounded),
-                  label: Text('AI'),
+                  icon: Icon(Icons.extension_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.extension_rounded, color: Colors.white),
+                  label: Text('Extensions', style: TextStyle(color: Colors.white)),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.auto_awesome_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.auto_awesome_rounded, color: Colors.white),
+                  label: Text('AI', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -125,7 +136,7 @@ class AppShell extends ConsumerWidget {
                       onPressed: () => CommandPaletteSheet.show(context),
                       icon: const Icon(Icons.search_rounded, size: 20),
                       label: const Text('Palette'),
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: const Color(0xFF3A3A3A),
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -153,15 +164,11 @@ class AppShell extends ConsumerWidget {
               color: Colors.transparent,
               child: Ink(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, Color(0xFF4F46E5)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: const Color(0xFF3A3A3A),
                   borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.4),
+                      color: const Color(0xFF3A3A3A).withOpacity(0.4),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -213,7 +220,14 @@ class AppShell extends ConsumerWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             height: 60,
-            indicatorColor: AppColors.primary.withOpacity(0.18),
+            indicatorColor: const Color(0xFF3A3A3A),
+            labelTextStyle: WidgetStateProperty.resolveWith((states) {
+              return const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              );
+            }),
             destinations: navItems,
           ),
         ),

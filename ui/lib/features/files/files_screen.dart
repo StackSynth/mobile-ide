@@ -395,7 +395,7 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
                 : Colors.transparent),
         border: isSelected
             ? const Border(
-                left: BorderSide(color: AppColors.accentCyan, width: 3.5),
+                left: BorderSide(color: Color(0xFF5A5A5A), width: 3.5),
               )
             : null,
       ),
@@ -638,37 +638,25 @@ class _FilesScreenState extends ConsumerState<FilesScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppColors.accentCyan.withOpacity(0.12),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.folder_open_rounded,
-                size: 38,
-                color: AppColors.accentCyan,
-              ),
+            const Text(
+              'This project is empty. Open the terminal to set it up.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'No files in workspace',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Your project directory is empty. Get started by creating your first file or folder.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: AppColors.darkTextMuted),
-            ),
-            const SizedBox(height: 24),
             SizedBox(
               height: 48,
-              child: FilledButton.icon(
-                icon: const Icon(Icons.note_add_rounded, size: 20),
-                label: const Text('Create First File'),
-                onPressed: () => _promptCreate(parentPath: '/', isFolder: false),
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF3A3A3A),
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Color(0xFF5A5A5A)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => context.go('/terminal'),
+                child: const Text('Open Terminal', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

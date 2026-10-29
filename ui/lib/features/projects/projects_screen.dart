@@ -24,14 +24,6 @@ class ProjectsScreen extends ConsumerWidget {
     }
   }
 
-  IconData _getStackIcon(String stack) {
-    if (stack.contains('react') || stack.contains('vite')) return Icons.bolt_rounded;
-    if (stack.contains('next')) return Icons.layers_rounded;
-    if (stack.contains('python')) return Icons.data_object_rounded;
-    if (stack.contains('flutter')) return Icons.flutter_dash_rounded;
-    return Icons.terminal_rounded;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -126,7 +118,7 @@ class ProjectsScreen extends ConsumerWidget {
                         icon: const Icon(Icons.add_rounded, size: 18),
                         label: const Text('New Project', style: TextStyle(fontWeight: FontWeight.bold)),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: const Color(0xFF3A3A3A),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -141,6 +133,7 @@ class ProjectsScreen extends ConsumerWidget {
                         label: const Text('Clone Repo', style: TextStyle(fontWeight: FontWeight.w600)),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
+                          side: const BorderSide(color: Color(0xFF3A3A3A)),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
@@ -191,8 +184,8 @@ class ProjectsScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: isCurrent
-                                ? (isDark ? const Color(0xFF4B5563) : const Color(0xFF6B7280))
-                                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                ? const Color(0xFF5A5A5A)
+                                : const Color(0xFF3A3A3A),
                             width: isCurrent ? 1.5 : 1,
                           ),
                         ),
@@ -205,12 +198,12 @@ class ProjectsScreen extends ConsumerWidget {
                                   width: 38,
                                   height: 38,
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary.withOpacity(0.12),
+                                    color: const Color(0xFF3A3A3A).withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Icon(
-                                    _getStackIcon(project.stack),
-                                    color: AppColors.primaryLight,
+                                  child: const Icon(
+                                    Icons.folder_rounded,
+                                    color: AppColors.accentCyan,
                                     size: 20,
                                   ),
                                 ),
@@ -225,39 +218,43 @@ class ProjectsScreen extends ConsumerWidget {
                                             child: Text(
                                               project.name,
                                               style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
+                                                fontWeight: FontWeight.bold,
                                                 fontSize: 15,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           if (isCurrent) ...[
-                                            const SizedBox(width: 6),
+                                            const SizedBox(width: 8),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                               decoration: BoxDecoration(
-                                                color: AppColors.primary.withOpacity(0.2),
+                                                color: const Color(0xFF5A5A5A).withOpacity(0.3),
                                                 borderRadius: BorderRadius.circular(4),
+                                                border: Border.all(color: const Color(0xFF5A5A5A), width: 1),
                                               ),
                                               child: const Text(
                                                 'ACTIVE',
                                                 style: TextStyle(
                                                   fontSize: 9,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: AppColors.primaryLight,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white,
+                                                  letterSpacing: 0.5,
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ],
                                       ),
-                                      const SizedBox(height: 2),
+                                      const SizedBox(height: 3),
                                       Text(
-                                        project.stackLabel,
+                                        project.description,
                                         style: const TextStyle(
                                           fontSize: 12,
-                                          color: AppColors.darkTextMuted,
+                                          color: AppColors.darkTextSecondary,
                                         ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -265,28 +262,18 @@ class ProjectsScreen extends ConsumerWidget {
                                 StatusChip(status: project.status),
                               ],
                             ),
-                            const SizedBox(height: 12),
-                            Text(
-                              project.description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12.5,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Divider(height: 1),
+                            const SizedBox(height: 14),
+                            const Divider(height: 1, color: Color(0xFF3A3A3A)),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.access_time_rounded, size: 14, color: AppColors.darkTextMuted),
+                                    const Icon(Icons.access_time_rounded, size: 13, color: AppColors.darkTextMuted),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'Opened ${_formatTimeAgo(project.lastOpened)}',
+                                      _formatTimeAgo(project.lastOpened),
                                       style: const TextStyle(fontSize: 11.5, color: AppColors.darkTextMuted),
                                     ),
                                   ],

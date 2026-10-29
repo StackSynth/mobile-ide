@@ -9,6 +9,7 @@ import '../preview/preview_screen.dart';
 import '../ai/ai_screen.dart';
 import '../ai/diff_review_screen.dart';
 import '../settings/settings_screen.dart';
+import '../extensions/extensions_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -37,7 +38,7 @@ final appRouter = GoRouter(
       builder: (context, state) => const SettingsScreen(),
     ),
 
-    // Stateful Navigation Shell for 5 Tabs
+    // Stateful Navigation Shell for 6 Tabs
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return AppShell(navigationShell: navigationShell);
@@ -83,7 +84,17 @@ final appRouter = GoRouter(
           ],
         ),
 
-        // Tab 4: AI
+        // Tab 4: Extensions
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/extensions',
+              builder: (context, state) => const ExtensionsScreen(),
+            ),
+          ],
+        ),
+
+        // Tab 5: AI
         StatefulShellBranch(
           routes: [
             GoRoute(

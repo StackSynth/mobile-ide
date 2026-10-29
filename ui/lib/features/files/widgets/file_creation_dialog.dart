@@ -157,7 +157,7 @@ class _FileCreationDialogState extends State<FileCreationDialog> {
               decoration: BoxDecoration(
                 color: surfaceElevated,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: borderColor),
+                border: Border.all(color: const Color(0xFF3A3A3A)),
               ),
               child: Row(
                 children: [
@@ -192,15 +192,15 @@ class _FileCreationDialogState extends State<FileCreationDialog> {
                 fillColor: surfaceElevated,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: borderColor),
+                  borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: borderColor),
+                  borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Color(0xFF4B5563), width: 1.5),
+                  borderSide: const BorderSide(color: Color(0xFF5A5A5A), width: 1.5),
                 ),
               ),
             ),

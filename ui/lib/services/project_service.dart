@@ -78,13 +78,13 @@ class MockProjectService implements ProjectService {
   }) async {
     await Future.delayed(const Duration(milliseconds: 700));
     String stackLabel = 'Workspace';
-    String icon = 'terminal';
+    String icon = 'folder';
     int port = 5173;
 
     final newProj = Project(
       id: 'proj_${DateTime.now().millisecondsSinceEpoch}',
       name: name.trim().replaceAll(' ', '-').toLowerCase(),
-      description: 'Workspace ready for terminal environment setup',
+      description: 'Empty workspace container',
       stack: 'workspace',
       stackLabel: stackLabel,
       stackIcon: icon,

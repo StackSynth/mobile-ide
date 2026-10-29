@@ -70,22 +70,7 @@ class OpenTabsNotifier extends StateNotifier<OpenTabsState> {
       }
     }
 
-    // Default starter tabs
-    try {
-      final appTsx = await _fileService.readFile('/src/App.tsx');
-      final headerTsx = await _fileService.readFile('/src/components/Header.tsx');
-      state = OpenTabsState(
-        tabs: [
-          OpenFileTab(path: '/src/App.tsx', name: 'App.tsx', content: appTsx, isDirty: false),
-          OpenFileTab(path: '/src/components/Header.tsx', name: 'Header.tsx', content: headerTsx),
-        ],
-        activeIndex: 0,
-      );
-      _persistTabs();
-    } catch (_) {
-      // If project has no initial files, start with empty tabs
-      state = const OpenTabsState(tabs: [], activeIndex: 0);
-    }
+    state = const OpenTabsState(tabs: [], activeIndex: 0);
   }
 
   void _persistTabs() {

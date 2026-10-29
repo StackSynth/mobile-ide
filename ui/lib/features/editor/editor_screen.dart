@@ -393,7 +393,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                     style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: const Color(0xFF3A3A3A),
                     foregroundColor: Colors.white,
                     elevation: 8,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

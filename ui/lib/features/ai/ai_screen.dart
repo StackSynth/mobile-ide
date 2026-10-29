@@ -86,7 +86,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
                   style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: const Color(0xFF3A3A3A),
                   foregroundColor: Colors.white,
                   visualDensity: VisualDensity.compact,
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -125,7 +125,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             padding: const EdgeInsets.symmetric(horizontal: 4),
                             backgroundColor: AppColors.primary.withOpacity(0.12),
-                            side: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+                            side: const BorderSide(color: Color(0xFF3A3A3A)),
                             label: Text(
                               chip,
                               style: const TextStyle(
